@@ -1,0 +1,143 @@
+"""
+A datetime string with format `Y-m-d H:i:s`
+"""
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"""
+Root Query
+"""
+type Query {
+    products(shopDomain: String!, search: String, status: String): [Product!]!
+        @field(resolver: "App\\GraphQL\\Queries\\ProductsQuery@resolve")
+
+    customers(shopDomain: String!, search: String): [Customer!]!
+        @field(resolver: "App\\GraphQL\\Queries\\CustomersQuery@resolve")
+
+    orders(
+        shopDomain: String!
+        financial_status: String
+        fulfillment_status: String
+        from: DateTime
+        to: DateTime
+    ): [Order!]! @field(resolver: "App\\GraphQL\\Queries\\OrdersQuery@resolve")
+
+    dashboard(shopDomain: String!, range: DateRangeInput): DashboardStats!
+        @field(resolver: "App\\GraphQL\\Queries\\DashboardQuery@resolve")
+}
+
+"""
+Date filter for dashboard
+"""
+input DateRangeInput {
+    from: DateTime
+    to: DateTime
+}
+
+"""
+Product entity
+"""
+type Product {
+    id: ID!
+    shopify_id: ID
+    title: String
+    price: Float
+    status: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+"""
+Customer entity
+"""
+type Customer {
+    id: ID!
+    shopify_id: ID
+    email: String
+    first_name: String
+    last_name: String
+    full_name: String
+    orders_count: Int
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+"""
+Order entity
+"""
+type Order {
+    id: ID!
+    shopify_id: ID
+    customer_id: ID
+    total_price: Float
+    currency: String
+    financial_status: String
+    fulfillment_status: String
+    shopify_created_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+
+    customer: Customer @belongsTo
+    items: [OrderItem!]! @hasMany
+}
+
+"""
+Order item
+"""
+type OrderItem {
+    id: ID!
+    product_id: ID
+    shopify_product_id: ID
+    title: String
+    quantity: Int
+    price: Float
+    created_at: DateTime
+    updated_at: DateTime
+
+    product: Product @belongsTo
+}
+
+"""
+Dashboard analytics
+"""
+type DashboardStats {
+    revenue: Float!
+    ordersCount: Int!
+    averageOrderValue: Float!
+    customers: Int!
+    repeatCustomers: Int!
+    repeatCustomerRate: Float!
+    revenuePerCustomer: Float!
+    ordersPerCustomer: Float!
+    uniqueCustomers: Int!
+    revenueByDay: [RevenueByDay!]!
+}
+
+type RevenueByDay {
+    date: String!
+    revenue: Float!
+    orders_count: Int!
+}
+
+"""
+Sync mutations
+"""
+type Mutation {
+    syncAll(shopDomain: String!): Boolean!
+        @field(resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncAll")
+
+    syncProducts(shopDomain: String!): Boolean!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncProducts"
+        )
+
+    syncCustomers(shopDomain: String!): Boolean!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncCustomers"
+        )
+
+    syncOrders(shopDomain: String!): Boolean!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncOrders"
+        )
+}
