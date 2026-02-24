@@ -11,20 +11,44 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterShopJob implements ShouldQueue
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
+
+class RegisterShopJob implements ShouldQueue, ShouldBeUniqueUntilProcessing
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $tries = 3;
     public $backoff = [10, 30, 60];
-    public function __construct(protected Shop $shop)
+
+    public function __construct(protected Shop $shop) {}
+
+    public function uniqueId(): string
     {
+        return 'register-shop-' . $this->shop->id;
     }
 
     public function handle(ShopifyService $service)
     {
-        logger("RegisterShopJob");
-        $service
-            ->forShop($this->shop)
-            ->install();
+        $this->shop->update([
+            'sync_status' => 'syncing',
+            'sync_error'  => null,
+        ]);
+
+        try {
+            $service
+                ->forShop($this->shop)
+                ->install();
+
+            $this->shop->update([
+                'sync_status' => 'idle',
+            ]);
+        } catch (\Throwable $e) {
+            $this->shop->update([
+                'sync_status' => 'failed',
+                'sync_error'  => $e->getMessage(),
+            ]);
+
+            throw $e;
+        }
     }
 }

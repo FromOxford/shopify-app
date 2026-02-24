@@ -24,10 +24,10 @@ final class OAuthController extends Controller
         session(['shopify_oauth_state' => $state]);
 
         $installUrl = "https://{$shop}/admin/oauth/authorize?" . http_build_query([
-            'client_id'     => config('services.shopify.key'),
-            'scope'         => 'read_products,write_products,read_orders,read_customers,write_customers',
-            'redirect_uri'  => config('services.shopify.redirect'),
-            'state'         => $state,
+            'client_id' => config('services.shopify.key'),
+            'scope' => 'read_products,write_products,read_orders,read_customers,write_customers',
+            'redirect_uri' => config('services.shopify.redirect'),
+            'state' => $state,
         ]);
 
         return redirect($installUrl);
@@ -35,11 +35,10 @@ final class OAuthController extends Controller
 
     public function callback(Request $request)
     {
-        // logger('callback');
         $request->validate([
-            'shop'  => ['required', 'regex:/^[a-zA-Z0-9-]+\.myshopify\.com$/'],
-            'code'  => ['required'],
-            'hmac'  => ['required'],
+            'shop' => ['required', 'regex:/^[a-zA-Z0-9-]+\.myshopify\.com$/'],
+            'code' => ['required'],
+            'hmac' => ['required'],
             'state' => ['required'],
         ]);
 
@@ -55,7 +54,7 @@ final class OAuthController extends Controller
         $calculated = hash_hmac(
             'sha256',
             urldecode(http_build_query($params)),
-            (string) config('services.shopify.secret')
+            config('services.shopify.secret')
         );
 
         if (!hash_equals($hmac, $calculated)) {
@@ -63,9 +62,9 @@ final class OAuthController extends Controller
         }
 
         $response = Http::post("https://{$request->shop}/admin/oauth/access_token", [
-            'client_id'     => config('services.shopify.key'),
+            'client_id' => config('services.shopify.key'),
             'client_secret' => config('services.shopify.secret'),
-            'code'          => $request->code,
+            'code' => $request->code,
         ]);
 
         if (!$response->successful()) {
@@ -74,14 +73,14 @@ final class OAuthController extends Controller
 
         $shop = Shop::updateOrCreate(
             ['domain' => $request->shop],
-            ['access_token' => $response->json('access_token')]
+            [
+                'access_token' => $response->json('access_token'),
+                'is_active' => true,
+            ]
         );
-        // logger($shop->sync_status);
-        if ($shop->sync_status !== 'syncing') {
 
-            RegisterShopJob::dispatch($shop);
-        }
+        RegisterShopJob::dispatch($shop);
 
-        return redirect('https://shopify-app-front.vercel.app/' . "?domain={$request->shop}"); // move to config('app.frontend_url')  // http://localhost:3000/
+        return redirect(config('app.frontend_url') . "/?domain={$request->shop}");
     }
 }
