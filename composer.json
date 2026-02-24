@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Shopify app api",
     "keywords": [
         "laravel",
         "framework"
@@ -12,7 +12,6 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.65"
     },
     "require-dev": {
@@ -20,10 +19,12 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
+        "mll-lab/laravel-graphiql": "^4.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^4.4",
-        "pestphp/pest-plugin-laravel": "^4.0"
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "rector/rector": "^2.3"
     },
     "autoload": {
         "psr-4": {

@@ -118,26 +118,3 @@ type RevenueByDay {
     revenue: Float!
     orders_count: Int!
 }
-
-"""
-Sync mutations
-"""
-type Mutation {
-    syncAll(shopDomain: String!): Boolean!
-        @field(resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncAll")
-
-    syncProducts(shopDomain: String!): Boolean!
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncProducts"
-        )
-
-    syncCustomers(shopDomain: String!): Boolean!
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncCustomers"
-        )
-
-    syncOrders(shopDomain: String!): Boolean!
-        @field(
-            resolver: "App\\GraphQL\\Mutations\\ShopifySyncMutator@syncOrders"
-        )
-}

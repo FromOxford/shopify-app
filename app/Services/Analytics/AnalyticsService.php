@@ -3,8 +3,7 @@
 namespace App\Services\Analytics;
 
 use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Product;
+
 use App\Models\Shop;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -12,68 +11,68 @@ use Illuminate\Support\Facades\DB;
 
 class AnalyticsService
 {
-    protected function paidOrdersQuery(Shop $shop, ?Carbon $from = null, ?Carbon $to = null)
+
+    public function dashboardStats(Shop $shop, Carbon $from, Carbon $to): array
     {
-        return Order::query()
+        $ordersQuery = Order::query()
             ->where('shop_id', $shop->id)
             ->where('financial_status', 'PAID')
-            ->when($from, fn($query) => $query->where('shopify_created_at', '>=', $from))
-            ->when($to, fn($query) => $query->where('shopify_created_at', '<=', $to));
-    }
+            ->whereBetween('shopify_created_at', [$from, $to]);
 
-    public function revenue(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): float
-    {
-        return (float) $this->paidOrdersQuery($shop, $from, $to)
-            ->sum('total_price');
-    }
+        $ordersStats = $ordersQuery
+            ->selectRaw('
+            SUM(total_price) as revenue,
+            COUNT(*) as orders_count,
+            AVG(total_price) as average_order_value
+        ')
+            ->first();
 
-    public function ordersCount(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): int
-    {
-        return $this->paidOrdersQuery($shop, $from, $to)->count();
-    }
-
-    public function averageOrderValue(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): float
-    {
-        return (float) $this->paidOrdersQuery($shop, $from, $to)
-            ->avg('total_price') ?? 0;
-    }
-
-    public function customersCount(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): int
-    {
-        return Order::query()
+        $customersQuery = Order::query()
             ->where('shop_id', $shop->id)
             ->whereNotNull('customer_id')
-            ->when($from, fn($query) => $query->where('shopify_created_at', '>=', $from))
-            ->when($to, fn($query) => $query->where('shopify_created_at', '<=', $to))
-            ->select('customer_id')
-            ->groupBy('customer_id')
-            // ->havingRaw('COUNT(*) > 1')
-            ->get()
-            ->count();
-    }
+            ->whereBetween('shopify_created_at', [$from, $to]);
 
-    public function uniqueCustomersCount(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): int
-    {
-        $total = $this->customersCount($shop, $from, $to);
-        $repeat = $this->repeatCustomersCount($shop, $from, $to);
+        $customers = $customersQuery
+            ->selectRaw('
+            COUNT(DISTINCT customer_id) as total_customers
+        ')
+            ->first();
 
-        return max($total - $repeat, 0);
-    }
-    public function repeatCustomersCount(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): int
-    {
-        return Order::query()
+        $repeatCustomers = Order::query()
             ->where('shop_id', $shop->id)
-            ->whereNotNull('customer_id')
             ->where('financial_status', 'PAID')
-            ->when($from, fn($query) => $query->where('shopify_created_at', '>=', $from))
-            ->when($to, fn($query) => $query->where('shopify_created_at', '<=', $to))
+            ->whereNotNull('customer_id')
+            ->whereBetween('shopify_created_at', [$from, $to])
             ->select('customer_id')
             ->groupBy('customer_id')
             ->havingRaw('COUNT(*) > 1')
             ->get()
             ->count();
-    }
 
+        $totalCustomers = (int) $customers->total_customers;
+
+        $revenue = (float) $ordersStats->revenue;
+        $ordersCount = (int) $ordersStats->orders_count;
+        $avg = (float) $ordersStats->average_order_value;
+
+        return [
+            'revenue' => $revenue,
+            'ordersCount' => $ordersCount,
+            'averageOrderValue' => $avg,
+            'customers' => $totalCustomers,
+            'repeatCustomers' => $repeatCustomers,
+            'uniqueCustomers' => max($totalCustomers - $repeatCustomers, 0),
+            'repeatCustomerRate' => $totalCustomers
+                ? round($repeatCustomers / $totalCustomers * 100, 2)
+                : 0,
+            'revenuePerCustomer' => $totalCustomers
+                ? round($revenue / $totalCustomers, 2)
+                : 0,
+            'ordersPerCustomer' => $totalCustomers
+                ? round($ordersCount / $totalCustomers, 2)
+                : 0,
+        ];
+    }
 
     public function revenueByDay(Shop $shop, Carbon $from, Carbon $to): Collection
     {
@@ -89,47 +88,5 @@ class AnalyticsService
             ->groupBy(DB::raw('DATE(shopify_created_at)'))
             ->orderBy('date')
             ->get();
-    }
-
-    public function repeatCustomerRate(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): float
-    {
-        $total = $this->customersCount($shop, $from, $to);
-
-        if ($total === 0) {
-            return 0;
-        }
-
-        return round(
-            $this->repeatCustomersCount($shop, $from, $to) / $total * 100,
-            2
-        );
-    }
-
-    public function revenuePerCustomer(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): float
-    {
-        $customers = $this->customersCount($shop, $from, $to);
-
-        if ($customers === 0) {
-            return 0;
-        }
-
-        return round(
-            $this->revenue($shop, $from, $to) / $customers,
-            2
-        );
-    }
-
-    public function ordersPerCustomer(Shop $shop, ?Carbon $from = null, ?Carbon $to = null): float
-    {
-        $customers = $this->customersCount($shop, $from, $to);
-
-        if ($customers === 0) {
-            return 0;
-        }
-
-        return round(
-            $this->ordersCount($shop, $from, $to) / $customers,
-            2
-        );
     }
 }

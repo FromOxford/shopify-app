@@ -30,20 +30,11 @@ class DashboardQuery
             $from = now()->subDays(30);
             $to = now();
         }
-
-        return [
-            'revenue' => $this->analytics->revenue($shop, $from, $to),
-            'ordersCount' => $this->analytics->ordersCount($shop, $from, $to),
-            'averageOrderValue' => $this->analytics->averageOrderValue($shop, $from, $to),
-
-            'customers' => $this->analytics->customersCount($shop, $from, $to),
-            'repeatCustomers' => $this->analytics->repeatCustomersCount($shop, $from, $to),
-            'uniqueCustomers' => $this->analytics->uniqueCustomersCount($shop, $from, $to),
-
-            'repeatCustomerRate' => $this->analytics->repeatCustomerRate($shop, $from, $to),
-            'revenuePerCustomer' => $this->analytics->revenuePerCustomer($shop, $from, $to),
-            'ordersPerCustomer' => $this->analytics->ordersPerCustomer($shop, $from, $to),
-            'revenueByDay' => $this->analytics->revenueByDay($shop, $from, $to),
-        ];;
+        return array_merge(
+            $this->analytics->dashboardStats($shop, $from, $to),
+            [
+                'revenueByDay' => $this->analytics->revenueByDay($shop, $from, $to),
+            ]
+        );
     }
 }

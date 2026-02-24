@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7cd7e865e48b838e8e0771362655335a",
+    "content-hash": "d916b536b6fdd991316eab36c1723a43",
     "packages": [
         {
             "name": "brick/math",
@@ -2118,72 +2118,6 @@
                 }
             ],
             "time": "2026-01-15T06:54:53+00:00"
-        },
-        {
-            "name": "mll-lab/laravel-graphiql",
-            "version": "v4.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/50135ffb1874e41cd6bb59d6334e8639fe579c72",
-                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/console": "^9 || ^10 || ^11 || ^12",
-                "illuminate/contracts": "^9 || ^10 || ^11 || ^12",
-                "illuminate/support": "^9 || ^10 || ^11 || ^12",
-                "php": "^8"
-            },
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.45",
-                "larastan/larastan": "^2.9.14 || ^3.1",
-                "laravel/framework": "^9 || ^10 || ^11 || ^12",
-                "mll-lab/php-cs-fixer-config": "^5.10",
-                "orchestra/testbench": "^7.52 || ^8.33 || ^9.11 || ^10",
-                "phpstan/extension-installer": "^1.4.3",
-                "phpstan/phpstan": "^1.12.20 || ^2.1.7",
-                "phpstan/phpstan-phpunit": "^1.4.2 || ^2.0.6",
-                "phpunit/phpunit": "^9.6.22 || ^10.5.45 || ^11.5.15 || ^12.0.10"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "MLL\\GraphiQL\\GraphiQLServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "MLL\\GraphiQL\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Benedikt Franke",
-                    "email": "benedikt@franke.tech"
-                }
-            ],
-            "description": "Easily integrate GraphiQL into your Laravel project",
-            "keywords": [
-                "graphiql",
-                "graphql",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v4.0.2"
-            },
-            "time": "2025-05-12T07:21:46+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -7180,6 +7114,72 @@
             "time": "2026-02-06T12:16:02+00:00"
         },
         {
+            "name": "mll-lab/laravel-graphiql",
+            "version": "v4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mll-lab/laravel-graphiql.git",
+                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/50135ffb1874e41cd6bb59d6334e8639fe579c72",
+                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^9 || ^10 || ^11 || ^12",
+                "illuminate/contracts": "^9 || ^10 || ^11 || ^12",
+                "illuminate/support": "^9 || ^10 || ^11 || ^12",
+                "php": "^8"
+            },
+            "require-dev": {
+                "ergebnis/composer-normalize": "^2.45",
+                "larastan/larastan": "^2.9.14 || ^3.1",
+                "laravel/framework": "^9 || ^10 || ^11 || ^12",
+                "mll-lab/php-cs-fixer-config": "^5.10",
+                "orchestra/testbench": "^7.52 || ^8.33 || ^9.11 || ^10",
+                "phpstan/extension-installer": "^1.4.3",
+                "phpstan/phpstan": "^1.12.20 || ^2.1.7",
+                "phpstan/phpstan-phpunit": "^1.4.2 || ^2.0.6",
+                "phpunit/phpunit": "^9.6.22 || ^10.5.45 || ^11.5.15 || ^12.0.10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MLL\\GraphiQL\\GraphiQLServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MLL\\GraphiQL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benedikt Franke",
+                    "email": "benedikt@franke.tech"
+                }
+            ],
+            "description": "Easily integrate GraphiQL into your Laravel project",
+            "keywords": [
+                "graphiql",
+                "graphql",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
+                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v4.0.2"
+            },
+            "time": "2025-05-12T07:21:46+00:00"
+        },
+        {
             "name": "mockery/mockery",
             "version": "1.6.12",
             "source": {
@@ -8221,6 +8221,59 @@
             "time": "2026-01-25T14:56:51+00:00"
         },
         {
+            "name": "phpstan/phpstan",
+            "version": "2.1.40",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
+                "reference": "9b2c7aeb83a75d8680ea5e7c9b7fca88052b766b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
+            "support": {
+                "docs": "https://phpstan.org/user-guide/getting-started",
+                "forum": "https://github.com/phpstan/phpstan/discussions",
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "security": "https://github.com/phpstan/phpstan/security/policy",
+                "source": "https://github.com/phpstan/phpstan-src"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-23T15:04:35+00:00"
+        },
+        {
             "name": "phpunit/php-code-coverage",
             "version": "12.5.3",
             "source": {
@@ -8671,6 +8724,66 @@
                 }
             ],
             "time": "2026-02-16T08:34:36+00:00"
+        },
+        {
+            "name": "rector/rector",
+            "version": "2.3.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rectorphp/rector.git",
+                "reference": "bbd37aedd8df749916cffa2a947cfc4714d1ba2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/bbd37aedd8df749916cffa2a947cfc4714d1ba2c",
+                "reference": "bbd37aedd8df749916cffa2a947cfc4714d1ba2c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0",
+                "phpstan/phpstan": "^2.1.38"
+            },
+            "conflict": {
+                "rector/rector-doctrine": "*",
+                "rector/rector-downgrade-php": "*",
+                "rector/rector-phpunit": "*",
+                "rector/rector-symfony": "*"
+            },
+            "suggest": {
+                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
+            },
+            "bin": [
+                "bin/rector"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Instant Upgrade and Automated Refactoring of any PHP code",
+            "homepage": "https://getrector.com/",
+            "keywords": [
+                "automation",
+                "dev",
+                "migration",
+                "refactoring"
+            ],
+            "support": {
+                "issues": "https://github.com/rectorphp/rector/issues",
+                "source": "https://github.com/rectorphp/rector/tree/2.3.8"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-22T09:45:50+00:00"
         },
         {
             "name": "sebastian/cli-parser",

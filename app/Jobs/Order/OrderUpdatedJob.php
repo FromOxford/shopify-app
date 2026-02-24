@@ -7,13 +7,14 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Customer;
 use App\Models\OrderItem;
+use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
 
 class OrderUpdatedJob implements ShouldQueue
 {
@@ -56,8 +57,8 @@ class OrderUpdatedJob implements ShouldQueue
                     'customer_id' => $customerId,
                     'total_price' => $totalPrice,
                     'currency' => $currency,
-                    'financial_status' => $this->data['financial_status'] ?? null,
-                    'fulfillment_status' => $this->data['fulfillment_status'] ?? null,
+                    'financial_status' => $this->data['financial_status'] ? Str::upper($this->data['financial_status']) : null,
+                    'fulfillment_status' =>  $this->data['fulfillment_status'] ? Str::upper($this->data['fulfillment_status']) : null,
                     'shopify_created_at' => $createdAt ? Carbon::parse($createdAt)->toDateTimeString() : null,
                 ]
             );

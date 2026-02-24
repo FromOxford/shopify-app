@@ -6,16 +6,15 @@ use App\Models\Shop;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\Shop\RegisterShopJob;
-use App\Jobs\Shop\SyncShopDataJob;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use App\Services\Shopify\Core\ShopifyService;
 
-class OAuthController extends Controller
+
+final class OAuthController extends Controller
 {
     public function install(Request $request)
     {
-        logger('install');
+        // logger('install');
         $request->validate([
             'shop' => ['required', 'regex:/^[a-zA-Z0-9-]+\.myshopify\.com$/']
         ]);
@@ -36,7 +35,7 @@ class OAuthController extends Controller
 
     public function callback(Request $request)
     {
-        logger('callback');
+        // logger('callback');
         $request->validate([
             'shop'  => ['required', 'regex:/^[a-zA-Z0-9-]+\.myshopify\.com$/'],
             'code'  => ['required'],
@@ -77,13 +76,12 @@ class OAuthController extends Controller
             ['domain' => $request->shop],
             ['access_token' => $response->json('access_token')]
         );
-        logger($shop->sync_status);
+        // logger($shop->sync_status);
         if ($shop->sync_status !== 'syncing') {
 
             RegisterShopJob::dispatch($shop);
         }
 
-        return redirect('http://localhost:3000/' . "?domain={$request->shop}");
-        return redirect(config('app.frontend_url') . "domain?shop={$request->shop}");
+        return redirect('https://shopify-app-front.vercel.app/' . "?domain={$request->shop}"); // move to config('app.frontend_url')  // http://localhost:3000/
     }
 }

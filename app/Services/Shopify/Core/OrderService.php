@@ -162,7 +162,7 @@ class OrderService
   {
     return <<<'GRAPHQL'
       query Orders($cursor: String) {
-        orders(first: 50, after: $cursor, sortKey: CREATED_AT, reverse: true) {
+        orders(first: 50, after: $cursor, sortKey: CREATED_AT, reverse: false) {
           pageInfo {
             hasNextPage
             endCursor

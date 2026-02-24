@@ -96,12 +96,12 @@ class CustomerService
                     endCursor
                     }
                     edges {
-                    node {
-                        id
-                        email
-                        firstName
-                        lastName
-                    }
+                        node {
+                            id
+                            email
+                            firstName
+                            lastName
+                        }
                     }
                 }
             }
