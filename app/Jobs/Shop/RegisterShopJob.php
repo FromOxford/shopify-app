@@ -29,10 +29,7 @@ class RegisterShopJob implements ShouldQueue, ShouldBeUniqueUntilProcessing
 
     public function handle(ShopifyService $service)
     {
-        $this->shop->update([
-            'sync_status' => 'syncing',
-            'sync_error'  => null,
-        ]);
+        $this->shop->markSyncing();
 
         try {
             $service
@@ -43,10 +40,7 @@ class RegisterShopJob implements ShouldQueue, ShouldBeUniqueUntilProcessing
                 'sync_status' => 'idle',
             ]);
         } catch (\Throwable $e) {
-            $this->shop->update([
-                'sync_status' => 'failed',
-                'sync_error'  => $e->getMessage(),
-            ]);
+            $this->shop->markFailed($e->getMessage());
 
             throw $e;
         }

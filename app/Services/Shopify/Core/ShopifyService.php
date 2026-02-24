@@ -133,15 +133,9 @@ class ShopifyService
 
     public function syncAll(): void
     {
-        $this->shop->markSyncing();
-
         $this->syncSafely('products', fn() => $this->products->syncFromShopify($this->shop));
         $this->syncSafely('customers', fn() => $this->customers->syncFromShopify($this->shop));
         $this->syncSafely('orders', fn() => $this->orders->syncFromShopify($this->shop));
-
-        $this->shop->update([
-            'sync_status' => 'idle',
-        ]);
     }
 
     protected function syncSafely(string $resource, callable $callback): void
