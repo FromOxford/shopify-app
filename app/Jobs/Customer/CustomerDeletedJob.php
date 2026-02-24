@@ -15,18 +15,13 @@ class CustomerDeletedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected int $shopId;
-    protected int $shopifyId;
-
-    public function __construct(int $shopId, int $id)
+    public function __construct(protected int $shopId, protected int $shopifyId)
     {
-        $this->shopId = $shopId;
-        $this->shopifyId = $id;
     }
 
     public function handle()
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
             Customer::where('shop_id',  $this->shopId)
                 ->where('shopify_id', $this->shopifyId)
                 ->delete();

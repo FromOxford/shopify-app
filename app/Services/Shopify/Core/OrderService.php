@@ -16,11 +16,9 @@ use App\Services\Shopify\Clients\ShopifyClient;
 class OrderService
 {
   use ShopifyIdTrait;
-  protected ShopifyClient $client;
 
-  public function __construct(ShopifyClient $client)
+  public function __construct(protected ShopifyClient $client)
   {
-    $this->client = $client;
   }
 
   public function syncFromShopify(Shop $shop): void
@@ -28,7 +26,7 @@ class OrderService
     $cursor = null;
     $allShopifyIds = [];
 
-    DB::transaction(function () use ($shop, &$cursor, &$allShopifyIds) {
+    DB::transaction(function () use ($shop, &$cursor, &$allShopifyIds): void {
 
       $customers = Customer::where('shop_id', $shop->id)
         ->pluck('id', 'shopify_id');

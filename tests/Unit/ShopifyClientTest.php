@@ -4,7 +4,7 @@ use App\Models\Shop;
 use App\Services\Shopify\Clients\ShopifyClient;
 use Illuminate\Support\Facades\Http;
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('services.shopify.version', '2026-01');
 });
 
@@ -16,7 +16,7 @@ function fakeShop(array $overrides = []): Shop
     ], $overrides));
 }
 
-it('builds correct graphql endpoint', function () {
+it('builds correct graphql endpoint', function (): void {
     Http::fake([
         '*' => Http::response(['data' => []], 200),
     ]);
@@ -25,13 +25,11 @@ it('builds correct graphql endpoint', function () {
 
     $client->query(fakeShop(), '{ shop { id } }');
 
-    Http::assertSent(function ($request) {
-        return $request->url() ===
-            'https://test.myshopify.com/admin/api/2026-01/graphql.json';
-    });
+    Http::assertSent(fn($request) => $request->url() ===
+        'https://test.myshopify.com/admin/api/2026-01/graphql.json');
 });
 
-it('sends required shopify headers', function () {
+it('sends required shopify headers', function (): void {
     Http::fake([
         '*' => Http::response(['data' => []], 200),
     ]);
@@ -42,14 +40,12 @@ it('sends required shopify headers', function () {
         'access_token' => 'secret-token'
     ]), '{ shop { id } }');
 
-    Http::assertSent(function ($request) {
-        return $request->hasHeader('X-Shopify-Access-Token', 'secret-token')
-            && $request->hasHeader('Content-Type', 'application/json')
-            && $request->hasHeader('Accept', 'application/json');
-    });
+    Http::assertSent(fn($request) => $request->hasHeader('X-Shopify-Access-Token', 'secret-token')
+        && $request->hasHeader('Content-Type', 'application/json')
+        && $request->hasHeader('Accept', 'application/json'));
 });
 
-it('sends graphql query with variables', function () {
+it('sends graphql query with variables', function (): void {
     Http::fake([
         '*' => Http::response(['data' => []], 200),
     ]);
@@ -69,7 +65,7 @@ it('sends graphql query with variables', function () {
     });
 });
 
-it('throws exception when graphql returns errors', function () {
+it('throws exception when graphql returns errors', function (): void {
     Http::fake([
         '*' => Http::response([
             'errors' => [
@@ -83,7 +79,7 @@ it('throws exception when graphql returns errors', function () {
     $client->query(fakeShop(), '{ shop { id } }');
 })->throws(RuntimeException::class);
 
-it('throws exception if shop has no access token', function () {
+it('throws exception if shop has no access token', function (): void {
     $client = new ShopifyClient();
 
     $client->query(

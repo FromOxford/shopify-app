@@ -55,7 +55,7 @@ final class OAuthController extends Controller
         $calculated = hash_hmac(
             'sha256',
             urldecode(http_build_query($params)),
-            config('services.shopify.secret')
+            (string) config('services.shopify.secret')
         );
 
         if (!hash_equals($hmac, $calculated)) {

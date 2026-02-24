@@ -14,12 +14,10 @@ use Illuminate\Queue\SerializesModels;
 class RegisterShopJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected Shop $shop;
     public $tries = 3;
     public $backoff = [10, 30, 60];
-    public function __construct(Shop $shop)
+    public function __construct(protected Shop $shop)
     {
-        $this->shop = $shop;
     }
 
     public function handle(ShopifyService $service)

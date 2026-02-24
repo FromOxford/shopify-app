@@ -8,13 +8,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-beforeEach(function () {
+beforeEach(function (): void {
     config()->set('services.shopify.key', 'test_key');
     config()->set('services.shopify.secret', 'test_secret');
     config()->set('services.shopify.redirect', 'http://localhost/auth/callback');
 });
 
-it('redirects to shopify install url and stores state', function () {
+it('redirects to shopify install url and stores state', function (): void {
 
     $response = $this->get('/install?shop=test-shop.myshopify.com');
 
@@ -26,7 +26,7 @@ it('redirects to shopify install url and stores state', function () {
         ->toContain('https://test-shop.myshopify.com/admin/oauth/authorize');
 });
 
-it('handles successful oauth callback', function () {
+it('handles successful oauth callback', function (): void {
 
     Queue::fake();
 
@@ -48,7 +48,7 @@ it('handles successful oauth callback', function () {
     $hmac = hash_hmac(
         'sha256',
         urldecode(http_build_query($params)),
-        config('services.shopify.secret')
+        (string) config('services.shopify.secret')
     );
 
     $response = $this->get('/auth/callback?' . http_build_query(array_merge(
@@ -66,7 +66,7 @@ it('handles successful oauth callback', function () {
     Queue::assertPushed(RegisterShopJob::class);
 });
 
-it('fails when oauth state is invalid', function () {
+it('fails when oauth state is invalid', function (): void {
 
     session(['shopify_oauth_state' => 'correct']);
 
@@ -75,7 +75,7 @@ it('fails when oauth state is invalid', function () {
     $response->assertStatus(403);
 });
 
-it('fails when hmac is invalid', function () {
+it('fails when hmac is invalid', function (): void {
 
     $state = 'valid_state';
     session(['shopify_oauth_state' => $state]);

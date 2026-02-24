@@ -16,17 +16,17 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     // uncomment to reach your current PHP version
-    // ->withPhpSets()
-    // ->withTypeCoverageLevel(10)
-    // ->withDeadCodeLevel(10)
-    // ->withCodeQualityLevel(10)
-    ->withPreparedSets(
-        deadCode: true,
-        codeQuality: true,
-        codingStyle: true,
-        naming: true,
-        privatization: true,
-        typeDeclarations: true,
-        rectorPreset: true,
-        // ...
-    );;
+    ->withPhpSets()
+    ->withTypeCoverageLevel(10)
+    ->withDeadCodeLevel(10)
+    ->withCodeQualityLevel(10);
+    // ->withPreparedSets(
+    //     deadCode: true,
+    //     codeQuality: true,
+    //     codingStyle: true,
+    //     naming: true,
+    //     privatization: true,
+    //     typeDeclarations: true,
+    //     rectorPreset: true,
+    //     // ...
+    // );;

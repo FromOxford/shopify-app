@@ -12,11 +12,9 @@ use App\Services\Shopify\Clients\ShopifyClient;
 class ProductService
 {
     use ShopifyIdTrait;
-    protected ShopifyClient $client;
 
-    public function __construct(ShopifyClient $client)
+    public function __construct(protected ShopifyClient $client)
     {
-        $this->client = $client;
     }
 
     public function syncFromShopify(Shop $shop): void
@@ -24,7 +22,7 @@ class ProductService
         $cursor = null;
         $allShopifyIds = [];
 
-        DB::transaction(function () use ($shop, &$cursor, &$allShopifyIds) {
+        DB::transaction(function () use ($shop, &$cursor, &$allShopifyIds): void {
             do {
                 $response = $this->client->query($shop, $this->productsQuery(), [
                     'cursor' => $cursor,

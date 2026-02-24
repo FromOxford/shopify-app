@@ -32,32 +32,17 @@ class ShopifyWebhookController extends Controller
         //     'data' => $data,
         // ]);
 
-        switch ($topic) {
-            case 'products/create':
-                ProductCreatedJob::dispatch($shop->id, $data);
-                break;
-            case 'products/update':
-                ProductUpdatedJob::dispatch($shop->id, $data);
-                break;
-            case 'products/delete':
-                ProductDeletedJob::dispatch($shop->id, $data['id']);
-                break;
-            case 'customers/create':
-                CustomerCreatedJob::dispatch($shop->id, $data);
-                break;
-            case 'customers/update':
-                CustomerUpdatedJob::dispatch($shop->id, $data);
-                break;
-            case 'customers/delete':
-                CustomerDeletedJob::dispatch($shop->id, $data['id']);
-                break;
-            case 'orders/create':
-                OrderCreatedJob::dispatch($shop->id, $data);
-                break;
-            case 'orders/updated':
-                OrderUpdatedJob::dispatch($shop->id, $data);
-                break;
-        }
+        match ($topic) {
+            'products/create' => ProductCreatedJob::dispatch($shop->id, $data),
+            'products/update' => ProductUpdatedJob::dispatch($shop->id, $data),
+            'products/delete' => ProductDeletedJob::dispatch($shop->id, $data['id']),
+            'customers/create' => CustomerCreatedJob::dispatch($shop->id, $data),
+            'customers/update' => CustomerUpdatedJob::dispatch($shop->id, $data),
+            'customers/delete' => CustomerDeletedJob::dispatch($shop->id, $data['id']),
+            'orders/create' => OrderCreatedJob::dispatch($shop->id, $data),
+            'orders/updated' => OrderUpdatedJob::dispatch($shop->id, $data),
+            default => response()->json(['status' => 'ok']),
+        };
 
         return response()->json(['status' => 'ok']);
     }
@@ -71,7 +56,7 @@ class ShopifyWebhookController extends Controller
             hash_hmac(
                 'sha256',
                 $data,
-                config('services.shopify.secret'),
+                (string) config('services.shopify.secret'),
                 true
             )
         );

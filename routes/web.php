@@ -6,9 +6,7 @@ use App\Http\Controllers\OAuthController;
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 
 
 Route::get('/install', [OAuthController::class, 'install']);

@@ -20,18 +20,13 @@ class OrderCreatedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected int $shopId;
-    protected array $data;
-
-    public function __construct(int $shopId, array $data)
+    public function __construct(protected int $shopId, protected array $data)
     {
-        $this->shopId = $shopId;
-        $this->data = $data;
     }
 
     public function handle()
     {
-        DB::transaction(function () {
+        DB::transaction(function (): void {
 
             $customerId = null;
             $customerData = $this->data['customer'] ?? null;

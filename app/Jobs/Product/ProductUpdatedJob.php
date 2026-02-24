@@ -15,13 +15,8 @@ class ProductUpdatedJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected int $shopId;
-    protected array $data;
-
-    public function __construct(int $shopId, array $data)
+    public function __construct(protected int $shopId, protected array $data)
     {
-        $this->shopId = $shopId;
-        $this->data = $data;
     }
 
     public function handle()

@@ -11,7 +11,7 @@ trait ShopifyIdTrait
             return null;
         }
 
-        if (strpos($gid, '/') === false) {
+        if (!str_contains($gid, '/')) {
             return (int) $gid;
         }
 
